@@ -114,6 +114,24 @@ C_EnvProjectedTexture::C_EnvProjectedTexture( void )
 #endif
 }
 
+void C_EnvProjectedTexture::Spawn()
+{
+	BaseClass::Spawn();
+#ifdef MAPBASE
+	materials->BeginRenderTargetAllocation();
+
+	ImageFormat dstFormat = materials->GetShadowDepthTextureFormat();	// Vendor-dependent depth texture format
+	materials->BeginRenderTargetAllocation();
+
+	char strRTName[64];
+	Q_snprintf(strRTName, ARRAYSIZE(strRTName), "_rt_InternalShadowDepthTexture_%d", entindex()); //use entindex for individual rt name
+
+	m_depthTex.InitRenderTarget(512, 512, RT_SIZE_NO_CHANGE, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName);
+
+	materials->EndRenderTargetAllocation();
+#endif
+}
+
 C_EnvProjectedTexture::~C_EnvProjectedTexture( void )
 {
 	ShutDownLightHandle();
@@ -146,6 +164,22 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 {
 	if ( updateType == DATA_UPDATE_CREATED )
 	{
+
+		//if(m_depthTex.IsValid()) m_depthTex.Shutdown();
+		//
+		//materials->BeginRenderTargetAllocation();
+		//
+		//ImageFormat dstFormat = materials->GetShadowDepthTextureFormat();	// Vendor-dependent depth texture format
+		//materials->BeginRenderTargetAllocation();
+		//
+		//char strRTName[64];
+		//Q_snprintf(strRTName, ARRAYSIZE(strRTName), "_rt_ShadowDepthTexture_%d", entindex()); //use entindex for individual rt name
+		//
+		//m_depthTex.InitRenderTarget(512, 512, RT_SIZE_NO_CHANGE, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName);
+		//
+		//materials->EndRenderTargetAllocation();
+
+
 		m_SpotlightTexture.Init( m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
 	}
 #ifdef MAPBASE
@@ -406,6 +440,7 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		state.m_flShadowDepthBias = mat_depthbias_shadowmap.GetFloat();
 		state.m_flShadowAtten = m_flShadowAtten;
 		state.m_flShadowFilterSize = m_flShadowFilter;
+		state.m_pShadowDepthTexture = m_depthTex;
 #else
 		state.m_fQuadraticAtten = 0.0;
 		state.m_fLinearAtten = 100;

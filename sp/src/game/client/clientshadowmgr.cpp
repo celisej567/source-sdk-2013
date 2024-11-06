@@ -4544,6 +4544,8 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 
 		// Render to the shadow depth texture with appropriate view
 		view->UpdateShadowDepthTexture( m_DummyColorTexture, shadowDepthTexture, shadowView );
+		//view->UpdateShadowDepthTexture( m_DummyColorTexture, shadowDepthTexture, shadowView );
+		view->UpdateShadowDepthTexture( m_DummyColorTexture, (flashlightState.m_pShadowDepthTexture), shadowView );
 
 #ifdef MAPBASE
 		if ( j <= ( INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_LAST - INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_FIRST ) )

@@ -23,7 +23,7 @@ class C_EnvProjectedTexture : public C_BaseEntity
 {
 	DECLARE_CLASS( C_EnvProjectedTexture, C_BaseEntity );
 public:
-	DECLARE_CLIENTCLASS();
+	DECLARE_CLIENTCLASS()
 
 	void SetMaterial( IMaterial *pMaterial );
 	void SetLightColor( byte r, byte g, byte b, byte a );
@@ -35,6 +35,7 @@ public:
 
 #ifdef MAPBASE
 	virtual void Simulate();
+	virtual void Spawn();
 #else
 	virtual bool Simulate();
 #endif
@@ -96,6 +97,8 @@ private:
 
 	bool		m_bAlwaysDraw;
 	//bool		m_bProjectedTextureVersion;
+	CTextureReference m_depthTex;	// Depth-stencil surface
+
 #endif
 
 	Vector	m_vecExtentsMin;

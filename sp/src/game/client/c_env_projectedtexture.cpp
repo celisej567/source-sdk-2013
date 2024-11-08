@@ -11,6 +11,7 @@
 #endif
 #ifdef MAPBASE
 #include "materialsystem/itexture.h"
+#include "clientshadowtexturehandler.hpp"
 #endif
 #include "shareddefs.h"
 #include "materialsystem/imesh.h"
@@ -121,12 +122,13 @@ void C_EnvProjectedTexture::Spawn()
 	materials->BeginRenderTargetAllocation();
 
 	ImageFormat dstFormat = materials->GetShadowDepthTextureFormat();	// Vendor-dependent depth texture format
-	materials->BeginRenderTargetAllocation();
 
 	char strRTName[64];
 	Q_snprintf(strRTName, ARRAYSIZE(strRTName), "_rt_InternalShadowDepthTexture_%d", entindex()); //use entindex for individual rt name
 
 	m_depthTex.InitRenderTarget(512, 512, RT_SIZE_NO_CHANGE, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName);
+	volatile const char* bebr = ((ITexture*)m_depthTex)->GetName();
+	Msg("%s", bebr);
 
 	materials->EndRenderTargetAllocation();
 #endif
@@ -440,7 +442,8 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		state.m_flShadowDepthBias = mat_depthbias_shadowmap.GetFloat();
 		state.m_flShadowAtten = m_flShadowAtten;
 		state.m_flShadowFilterSize = m_flShadowFilter;
-		state.m_pShadowDepthTexture = m_depthTex;
+
+		g_flashlightDepthHandler.AddDepthTexture(entindex(), m_depthTex);
 #else
 		state.m_fQuadraticAtten = 0.0;
 		state.m_fLinearAtten = 100;

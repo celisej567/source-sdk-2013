@@ -83,6 +83,7 @@
 #include "cmodel.h"
 #ifdef MAPBASE
 #include "renderparm.h"
+#include "clientshadowtexturehandler.hpp"
 #endif
 #ifdef ASW_PROJECTED_TEXTURES
 #include "flashlighteffect.h"
@@ -4462,6 +4463,7 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 
 		CTextureReference shadowDepthTexture;
 		bool bGotShadowDepthTexture = LockShadowDepthTexture( &shadowDepthTexture );
+		shadowDepthTexture = *(CTextureReference*)flashlightState.m_pShadowDepthTexture;
 		if ( !bGotShadowDepthTexture )
 		{
 			// If we don't get one, that means we have too many this frame so bind no depth texture
@@ -4489,7 +4491,9 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 #endif
 		shadowView.x = shadowView.y = 0;
 		shadowView.width = shadowDepthTexture->GetActualWidth();
+		//shadowView.width = flashlightState.m_pShadowDepthTexture->GetActualWidth();
 		shadowView.height = shadowDepthTexture->GetActualHeight();
+		//shadowView.height = flashlightState.m_pShadowDepthTexture->GetActualHeight();
 #ifndef ASW_PROJECTED_TEXTURES
 		shadowView.m_bOrtho = false;
 		shadowView.m_bDoBloomAndToneMapping = false;
@@ -4544,8 +4548,9 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 
 		// Render to the shadow depth texture with appropriate view
 		view->UpdateShadowDepthTexture( m_DummyColorTexture, shadowDepthTexture, shadowView );
+		//if(flashlightState.m_pShadowDepthTexture)
+		//	view->UpdateShadowDepthTexture( m_DummyColorTexture, (flashlightState.m_pShadowDepthTexture), shadowView );
 		//view->UpdateShadowDepthTexture( m_DummyColorTexture, shadowDepthTexture, shadowView );
-		view->UpdateShadowDepthTexture( m_DummyColorTexture, (flashlightState.m_pShadowDepthTexture), shadowView );
 
 #ifdef MAPBASE
 		if ( j <= ( INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_LAST - INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_FIRST ) )

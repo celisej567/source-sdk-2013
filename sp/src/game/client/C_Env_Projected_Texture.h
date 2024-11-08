@@ -97,7 +97,9 @@ private:
 
 	bool		m_bAlwaysDraw;
 	//bool		m_bProjectedTextureVersion;
+public:
 	CTextureReference m_depthTex;	// Depth-stencil surface
+private:
 
 #endif
 

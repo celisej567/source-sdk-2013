@@ -415,8 +415,6 @@ struct MaterialVideoMode_t
 	int m_RefreshRate;		// 0 == default (ignored for windowed mode)
 };
 
-class CTextureReference;
-
 // fixme: should move this into something else.
 struct FlashlightState_t
 {
@@ -501,7 +499,6 @@ struct FlashlightState_t
 
 #ifdef MAPBASE
 	bool m_bAlwaysDraw;
-	ITexture *m_pShadowDepthTexture;
 #endif
 
 	// Getters for scissor members
